@@ -1,5 +1,6 @@
 import numpy as np
 import keras
+import os
 
 
 class DataGenerator(keras.utils.Sequence):
@@ -14,8 +15,8 @@ class DataGenerator(keras.utils.Sequence):
         self.h = h
         self.w = w
         self.channels = channels
-        self.similar_files = np.arange(self.similar_file_count)
-        self.different_files = np.arange(self.different_file_count)
+        self.similar_files = os.listdir(similar_path)#np.arange(self.similar_file_count)
+        self.different_files = os.listdir(different_path)#np.arange(self.different_file_count)
 
     def __len__(self):
         """
@@ -45,17 +46,15 @@ class DataGenerator(keras.utils.Sequence):
         y = np.empty(self.batch_size, dtype=int)
 
         for i, file_id in enumerate(similar_ids):
-            full_path = np.load('{0}/{1}.npy'.format(self.similar_path, file_id))
-            npy_record = np.load(full_path)
-            X[0][i, ] = npy_record[0]
-            X[1][i, ] = npy_record[1]
+            npy_record = np.load('{0}/{1}'.format(self.similar_path, file_id))
+            X[0][i, ] = npy_record[0]+0.5
+            X[1][i, ] = npy_record[1]+0.5
             y[i] = 1
 
         for j, file_id in enumerate(different_ids):
-            full_path = np.load('{0}/{1}.npy'.format(self.similar_path, file_id))
-            npy_record = np.load(full_path)
-            X[0][j+self.batch_size//2, ] = npy_record[0]
-            X[1][j+self.batch_size//2, ] = npy_record[1]
-            y[i] = 1
+            npy_record = np.load('{0}/{1}'.format(self.different_path, file_id))
+            X[0][j+self.batch_size//2, ] = npy_record[0]+0.5
+            X[1][j+self.batch_size//2, ] = npy_record[1]+0.5
+            y[j+self.batch_size//2] = 0
 
         return X, y

@@ -7,10 +7,10 @@ import uuid
 from multiprocessing import Pool
 
 
-npy_dir = 'dataset/train_npy'
+npy_dir = 'dataset_old/val_npy'
 similar_dir = os.path.join(npy_dir, 'similar')
 different_dir = os.path.join(npy_dir, 'different')
-image_data_dir = 'dataset/train'
+image_data_dir = 'dataset_old/val'
 thread_count = 8
 
 
@@ -18,8 +18,8 @@ def save_pair(pair, save_dir):
     try:
         img_1 = io.imread(pair[0])
         img_2 = io.imread(pair[1])
-        img_1 = transform.resize(img_1, (128, 128), anti_aliasing=True) - 0.5
-        img_2 = transform.resize(img_2, (128, 128), anti_aliasing=True) - 0.5
+        img_1 = transform.resize(img_1, (150, 150), anti_aliasing=True) - 0.5
+        img_2 = transform.resize(img_2, (150, 150), anti_aliasing=True) - 0.5
         out_array = np.stack([img_1, img_2], axis=0)
         np.save(os.path.join(save_dir, uuid.uuid4().hex), out_array)
     except:
@@ -64,5 +64,5 @@ def make_different_pairs(data_dir):
 
 
 if __name__ == '__main__':
-    make_similar_pairs(image_data_dir)
-    # make_different_pairs(image_data_dir)
+    # make_similar_pairs(image_data_dir)
+    make_different_pairs(image_data_dir)
