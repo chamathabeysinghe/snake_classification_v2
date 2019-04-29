@@ -7,10 +7,10 @@ import uuid
 from multiprocessing import Pool
 
 
-npy_dir = 'dataset_old/val_npy'
+npy_dir = 'dataset/val_npy'
 similar_dir = os.path.join(npy_dir, 'similar')
 different_dir = os.path.join(npy_dir, 'different')
-image_data_dir = 'dataset_old/val'
+image_data_dir = 'dataset/val'
 thread_count = 8
 
 
