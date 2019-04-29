@@ -168,4 +168,7 @@ fabric.properties
 
 deprecated/
 data/dataset
+data/dataset_old
+logs
+checkpoints
 .DS_Store
