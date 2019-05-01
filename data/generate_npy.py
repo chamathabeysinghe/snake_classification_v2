@@ -21,13 +21,13 @@ def save_pair(pair, save_dir):
         if img_1.mode != 'RGB':
             img_1 = img_1.convert('RGB')
         img_1 = np.asarray(img_1)
-        img_1 = transform.resize(img_1, (150, 150))
+        img_1 = transform.resize(img_1, (150, 150)) - 0.5
 
         img_2 = Image.open(pair[1])
         if img_2.mode != 'RGB':
             img_2 = img_2.convert('RGB')
         img_2 = np.asarray(img_2)
-        img_2 = transform.resize(img_2, (150, 150))
+        img_2 = transform.resize(img_2, (150, 150)) - 0.5
 
         # img_1 = io.imread(pair[0])
         # img_2 = io.imread(pair[1])
