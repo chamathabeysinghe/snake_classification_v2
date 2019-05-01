@@ -7,6 +7,7 @@ data_directory = 'dataset/raw_data'
 
 def delete(category_dir):
     all_files = [os.path.join(category_dir, x) for x in os.listdir(category_dir)]
+    print(all_files)
     for file in all_files:
         try:
             a = np.load(file)
@@ -24,10 +25,10 @@ def delete_many(category_dir):
 
 
 if __name__ == '__main__':
-    directories = ['dataset_old/train_npy/similar',
-                   'dataset_old/train_npy/different',
-                   'dataset_old/val_npy/similar',
-                   'dataset_old/val_npy/different']
+    directories = ['dataset/train_npy/similar',
+                   'dataset/train_npy/different',
+                   'dataset/val_npy/similar',
+                   'dataset/val_npy/different']
     pool = Pool(thread_count)
     pool.map(delete_many, directories)
 
