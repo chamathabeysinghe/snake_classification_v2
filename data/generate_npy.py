@@ -1,6 +1,7 @@
 import os
 import itertools
-from skimage import io
+from PIL import Image
+# from skimage import io
 from skimage import transform
 import numpy as np
 import uuid
@@ -16,10 +17,22 @@ thread_count = 8
 
 def save_pair(pair, save_dir):
     try:
-        img_1 = io.imread(pair[0])
-        img_2 = io.imread(pair[1])
-        img_1 = transform.resize(img_1, (150, 150), anti_aliasing=True) - 0.5
-        img_2 = transform.resize(img_2, (150, 150), anti_aliasing=True) - 0.5
+        img_1 = Image.open(pair[0])
+        if img_1.mode != 'RGB':
+            img_1 = img_1.convert('RGB')
+        img_1 = np.asarray(img_1)
+        img_1 = transform.resize(img_1, (150, 150))
+
+        img_2 = Image.open(pair[1])
+        if img_2.mode != 'RGB':
+            img_2 = img_2.convert('RGB')
+        img_2 = np.asarray(img_2)
+        img_2 = transform.resize(img_2, (150, 150))
+
+        # img_1 = io.imread(pair[0])
+        # img_2 = io.imread(pair[1])
+        # img_1 = transform.resize(img_1, (150, 150), anti_aliasing=True) - 0.5
+        # img_2 = transform.resize(img_2, (150, 150), anti_aliasing=True) - 0.5
         out_array = np.stack([img_1, img_2], axis=0)
         np.save(os.path.join(save_dir, uuid.uuid4().hex), out_array)
     except:
@@ -30,7 +43,7 @@ def save_pair(pair, save_dir):
 def generate_similar_pairs(category_dir):
     images = [os.path.join(category_dir, x) for x in os.listdir(category_dir) if not x.startswith('.')]
     print(category_dir)
-    for pair in itertools.product(images, images):
+    for pair in itertools.combinations(images, 2):
         save_pair(pair, similar_dir)
     print('{0} category done'.format(category_dir))
 

@@ -5,7 +5,7 @@ from keras.models import load_model
 from keras.optimizers import Adam
 
 from data.DataGenerator import DataGenerator
-from data.ImageLoader import ImageLoader
+from data.ImageLoaderNPY import ImageLoader
 from model.SiameseModel import SiameseModel
 import os
 from time import time
@@ -51,34 +51,34 @@ val_different_path = './data/dataset/val_npy/different'
 val_similar_file_count = len(os.listdir(val_similar_path))
 val_different_file_count = len(os.listdir(val_different_path))
 
-# training_generator = DataGenerator(training_similar_path,
-#                                    training_different_path,
-#                                    training_similar_file_count,
-#                                    training_different_file_count,
-#                                    batch_size=10)
-#
-# validation_generator = DataGenerator(val_similar_path,
-#                                      val_different_path,
-#                                      val_similar_file_count,
-#                                      val_different_file_count,
-#                                      batch_size=10)
-#
-#
-# model.fit_generator(generator=training_generator,
-#                     epochs=n_epochs_to_train,
-#                     validation_data=validation_generator,
-#                     callbacks=[checkpoint, tensorboard],
-#                     use_multiprocessing=True,
-#                     initial_epoch=initial_epoch,
-#                     workers=6)
+training_generator = DataGenerator(training_similar_path,
+                                   training_different_path,
+                                   training_similar_file_count,
+                                   training_different_file_count,
+                                   batch_size=10)
 
-image_loader = ImageLoader('./data/dataset')
-model.fit_generator(generator=image_loader.generate(128),
-                    steps_per_epoch=5,
+validation_generator = DataGenerator(val_similar_path,
+                                     val_different_path,
+                                     val_similar_file_count,
+                                     val_different_file_count,
+                                     batch_size=10)
+
+
+model.fit_generator(generator=training_generator,
                     epochs=n_epochs_to_train,
-                    validation_data=image_loader.generate_val(32),
-                    validation_steps=1,
+                    validation_data=validation_generator,
                     callbacks=[checkpoint, tensorboard],
                     use_multiprocessing=True,
                     initial_epoch=initial_epoch,
                     workers=6)
+
+# image_loader = ImageLoader('./data/dataset')
+# model.fit_generator(generator=image_loader.generate(4),
+#                     steps_per_epoch=1,
+#                     epochs=n_epochs_to_train,
+#                     validation_data=image_loader.generate_val(4),
+#                     validation_steps=1,
+#                     callbacks=[tensorboard],
+#                     use_multiprocessing=True,
+#                     initial_epoch=initial_epoch,
+#                     workers=6)
