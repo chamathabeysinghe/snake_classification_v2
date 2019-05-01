@@ -22,11 +22,12 @@ class DataGenerator(keras.utils.Sequence):
         """
         Number of batches per epoch
         """
-        larger_count = max(self.similar_file_count, self.different_file_count)
+        larger_count = max(self.similar_file_count, self.different_file_count) * 2
         return int(np.floor(larger_count / self.batch_size))
 
     def __getitem__(self, index):
         half_batch_size = self.batch_size // 2
+        # TODO Test these
         similar_indexes = [x % self.similar_file_count for x in range(half_batch_size*index, half_batch_size*(index+1))]
         different_indexes = [x % self.different_file_count for x in range(half_batch_size*index, half_batch_size*(index+1))]
 
@@ -47,14 +48,14 @@ class DataGenerator(keras.utils.Sequence):
 
         for i, file_id in enumerate(similar_ids):
             npy_record = np.load('{0}/{1}'.format(self.similar_path, file_id))
-            X[0][i, ] = npy_record[0]+0.5
-            X[1][i, ] = npy_record[1]+0.5
+            X[0][i, ] = npy_record[0]
+            X[1][i, ] = npy_record[1]
             y[i] = 1
 
         for j, file_id in enumerate(different_ids):
             npy_record = np.load('{0}/{1}'.format(self.different_path, file_id))
-            X[0][j+self.batch_size//2, ] = npy_record[0]+0.5
-            X[1][j+self.batch_size//2, ] = npy_record[1]+0.5
+            X[0][j+self.batch_size//2, ] = npy_record[0]
+            X[1][j+self.batch_size//2, ] = npy_record[1]
             y[j+self.batch_size//2] = 0
 
         return X, y
