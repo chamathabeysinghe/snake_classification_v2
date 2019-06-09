@@ -1,3 +1,6 @@
+"""
+npy loader for Siamese Network
+"""
 import numpy as np
 import keras
 import os

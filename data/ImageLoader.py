@@ -1,3 +1,7 @@
+"""
+In memory image loader
+"""
+
 import os
 
 import matplotlib.pyplot as plt

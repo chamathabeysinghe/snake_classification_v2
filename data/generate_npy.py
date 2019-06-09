@@ -1,3 +1,6 @@
+"""
+Generates npys for Siamese network
+"""
 import os
 import itertools
 from PIL import Image
@@ -8,11 +11,11 @@ import uuid
 from multiprocessing import Pool
 
 
-npy_dir = 'dataset/val_npy'
+npy_dir = '/home/ubuntu/dataset/val_npy'
 similar_dir = os.path.join(npy_dir, 'similar')
 different_dir = os.path.join(npy_dir, 'different')
-image_data_dir = 'dataset/val'
-thread_count = 8
+image_data_dir = '/home/ubuntu/dataset/val'
+thread_count = 64
 
 
 def save_pair(pair, save_dir):
@@ -42,6 +45,7 @@ def save_pair(pair, save_dir):
 
 def generate_similar_pairs(category_dir):
     images = [os.path.join(category_dir, x) for x in os.listdir(category_dir) if not x.startswith('.')]
+    images = images[0:min(60, len(images))]
     print(category_dir)
     for pair in itertools.combinations(images, 2):
         save_pair(pair, similar_dir)
@@ -51,8 +55,10 @@ def generate_similar_pairs(category_dir):
 def generate_different_pairs(category_dir_pair):
     images_1 = [os.path.join(category_dir_pair[0], file) for file in os.listdir(category_dir_pair[0])
                 if not file.startswith('.')]
+    images_1 = images_1[0: min(9, len(images_1))]
     images_2 = [os.path.join(category_dir_pair[1], file) for file in os.listdir(category_dir_pair[1])
                 if not file.startswith('.')]
+    images_2 = images_2[0: min(9, len(images_2))]
     print(category_dir_pair)
     for pair in itertools.product(images_1, images_2):
         save_pair(pair, different_dir)
@@ -70,7 +76,7 @@ def make_similar_pairs(data_dir):
 def make_different_pairs(data_dir):
     os.makedirs(different_dir, exist_ok=True)
     directories = [os.path.join(data_dir, x) for x in os.listdir(data_dir) if not x.startswith('.')]
-    directory_pairs = [l for l in itertools.product(directories, directories) if l[0] != l[1]]
+    directory_pairs = [l for l in itertools.combinations(directories, 2)]
     pool = Pool(thread_count)
     pool.map(generate_different_pairs, directory_pairs)
     print('All pairs were done')

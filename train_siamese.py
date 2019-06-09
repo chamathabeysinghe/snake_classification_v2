@@ -9,6 +9,7 @@ from data.ImageLoaderNPY import ImageLoader
 from model.SiameseModel import SiameseModel
 import os
 from time import time
+from keras.utils import multi_gpu_model
 
 initial_epoch = 0
 ckpt_period = 10
@@ -24,6 +25,7 @@ else:
     model = SiameseModel().build()
 
 optimizer = Adam(0.000000006)
+model = multi_gpu_model(model, gpus=8)
 model.compile(loss='binary_crossentropy', optimizer=optimizer)
 
 os.makedirs("checkpoints", exist_ok=True)
@@ -41,13 +43,13 @@ tensorboard = TensorBoard(log_dir="logs/{}".format(time()), histogram_freq=0)
 if n_epochs_to_train <= initial_epoch:
     n_epochs_to_train += initial_epoch
 
-training_similar_path = './data/dataset/train_npy/similar'
-training_different_path = './data/dataset/train_npy/different'
+training_similar_path = '/home/ubuntu/dataset/train_npy/similar'
+training_different_path = '/home/ubuntu/dataset/train_npy/different'
 training_similar_file_count = len(os.listdir(training_similar_path))
 training_different_file_count = len(os.listdir(training_different_path))
 
-val_similar_path = './data/dataset/val_npy/similar'
-val_different_path = './data/dataset/val_npy/different'
+val_similar_path = '/home/ubuntu/dataset/val_npy/similar'
+val_different_path = '/home/ubuntu/dataset/val_npy/different'
 val_similar_file_count = len(os.listdir(val_similar_path))
 val_different_file_count = len(os.listdir(val_different_path))
 
@@ -55,13 +57,13 @@ training_generator = DataGenerator(training_similar_path,
                                    training_different_path,
                                    training_similar_file_count,
                                    training_different_file_count,
-                                   batch_size=10)
+                                   batch_size=500)
 
 validation_generator = DataGenerator(val_similar_path,
                                      val_different_path,
                                      val_similar_file_count,
                                      val_different_file_count,
-                                     batch_size=10)
+                                     batch_size=500)
 
 
 model.fit_generator(generator=training_generator,

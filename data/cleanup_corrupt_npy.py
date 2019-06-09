@@ -1,3 +1,7 @@
+"""
+This is for Siamese model to remove corrupted npy files
+"""
+
 import numpy as np
 import os
 from multiprocessing import Pool

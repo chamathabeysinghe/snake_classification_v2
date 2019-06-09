@@ -1,3 +1,6 @@
+"""
+Remove corrupted data from a directory
+"""
 from skimage import io
 import os
 from multiprocessing import Pool

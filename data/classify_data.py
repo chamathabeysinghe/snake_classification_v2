@@ -1,3 +1,8 @@
+"""
+This script is to divide dataset into validation set and training set
+It will save image files in train and val directories
+"""
+
 from os import listdir
 from os import makedirs
 from os import path
@@ -5,10 +10,12 @@ import random
 import shutil
 import math
 from multiprocessing import Pool
+from data.shared import base_directory
 
-data_directory = 'dataset/raw_data'
-train_directory = 'dataset/train'
-val_directory = 'dataset/val'
+
+data_directory = path.join(base_directory, 'raw_data')
+train_directory = path.join(base_directory, 'train')
+val_directory = path.join(base_directory, 'val')
 
 thread_count = 8
 
