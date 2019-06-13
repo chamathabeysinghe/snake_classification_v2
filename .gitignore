@@ -171,4 +171,7 @@ data/dataset
 data/dataset_old
 logs
 checkpoints
+reults/
 .DS_Store
+checkpoints_resnet
+logs_resnet
